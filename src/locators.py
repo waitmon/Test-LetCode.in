@@ -44,5 +44,11 @@ class PageLocators:
     RADIOBUTTONS = (By.CSS_SELECTOR, 'input[name="one"]')
     ONE_RADIOBUTTON = (By.CSS_SELECTOR, '#one')
     TWO_RADIOBUTTON = (By.CSS_SELECTOR, '#two')
-
-
+    NOBUG_RADIOBUTTON = (By.CSS_SELECTOR, '#nobug')
+    BUG_RADIOBUTTON = (By.CSS_SELECTOR, '#bug')
+    BAR_RADIOBUTTON = (By.CSS_SELECTOR, '#notfoo')
+    MAYBE_RADIOBUTTON = (By.CSS_SELECTOR, '#maybe')
+    REMEMBER_ME_CHECKBOX = (By.XPATH, '/html/body/app-root/app-radio-check/section[1]/div/div/div[1]/div/div/div['
+                                      '6]/label[2]/input')
+    TERMS_AND_CONDITIONS_CHECKBOX = (By.XPATH, '/html/body/app-root/app-radio-check/section[1]/div/div/div['
+                                               '1]/div/div/div[7]/label[2]/input')

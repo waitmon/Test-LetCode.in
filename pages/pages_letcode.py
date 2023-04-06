@@ -23,6 +23,7 @@ class InputPage(BasePage):
 
     def check_tab_key_pressed(self):
         input_field = self.element_is_present(self.locators.TAB_FIELD)
+        input_field.send_keys(', no doubts')
         initial_input_field_text = input_field.get_attribute('value')
         input_field.send_keys(Keys.TAB)
         next_input_field = self.element_is_present(self.locators.GET_ATTR_FIELD)
@@ -84,7 +85,6 @@ class DropdownPage(BasePage):
     locators = PageLocators()
 
     def check_select_by_visible_text(self):
-        # Test Case: Select the apple using visible text
         select = Select(self.element_is_present(self.locators.FRUITS_SELECTOR))
         select.select_by_visible_text('Apple')
         notification_text = self.element_is_visible(self.locators.NOTIFICATION).text
@@ -95,7 +95,6 @@ class DropdownPage(BasePage):
         assert selector.get_attribute('multiple')
 
     def check_selection_options(self):
-        # Test Case: Select the last programming language and print all the options
         select = Select(self.element_is_present(self.locators.PROG_LANGUAGE_SELECTOR))
         select.select_by_index(4)
         for option in select.options:
@@ -103,7 +102,6 @@ class DropdownPage(BasePage):
         assert select.options != '', 'Could not print all the options'
 
     def check_selection_by_value(self):
-        # Select India using value & print the selected value
         option_needed = self.element_is_present(self.locators.OPTION_INDIA)
         select = Select(self.element_is_present(self.locators.COUNTRY_SELECTOR))
         select.select_by_value('India')
@@ -128,6 +126,7 @@ class AlertPage(BasePage):
         alert_window = self.driver.switch_to.alert
         alert_text = alert_window.text
         alert_window.dismiss()
+        print(alert_text)
         assert alert_text == 'Are you happy with LetCode?', 'Alert window did not appear'
 
     def check_prompt_input(self):
@@ -178,9 +177,32 @@ class RadioAndCheckbox(BasePage):
     def check_only_one_radiobutton_can_be_selected(self):
         first_radiobutton = self.element_is_present(self.locators.ONE_RADIOBUTTON)
         second_radiobutton = self.element_is_present(self.locators.TWO_RADIOBUTTON)
+        first_radiobutton.click()
         second_radiobutton.click()
         assert second_radiobutton.is_selected() and not first_radiobutton.is_selected(), 'Both radiobuttons are ' \
                                                                                          'selected '
 
+    def check_both_radiobuttons_selected_bug(self):
+        first_radiobutton = self.element_is_present(self.locators.NOBUG_RADIOBUTTON)
+        second_radiobutton = self.element_is_present(self.locators.BUG_RADIOBUTTON)
+        first_radiobutton.click()
+        second_radiobutton.click()
+        assert not first_radiobutton.is_selected() and second_radiobutton.is_selected(), 'Both radiobuttons are ' \
+                                                                                         'selected'
 
+    def check_radiobutton_is_selected(self):
+        selected_radiobutton = self.element_is_present(self.locators.BAR_RADIOBUTTON)
+        assert 'on' in selected_radiobutton.get_attribute('value'), 'Radiobutton has no selected attribute'
 
+    def check_field_is_disabled(self):
+        disabled_radiobutton = self.element_is_present(self.locators.MAYBE_RADIOBUTTON)
+        assert not disabled_radiobutton.is_enabled(), 'Radiobutton is enabled for interaction'
+
+    def check_checkbox_is_selected(self):
+        selected_checkbox = self.element_is_present(self.locators.REMEMBER_ME_CHECKBOX)
+        assert selected_checkbox.is_selected(), 'Checkbox is not selected'
+
+    def check_terms_checkbox_is_selected(self):
+        selected_checkbox = self.element_is_present(self.locators.TERMS_AND_CONDITIONS_CHECKBOX)
+        selected_checkbox.click()
+        assert selected_checkbox.is_selected(), 'Checkbox was not selected'
