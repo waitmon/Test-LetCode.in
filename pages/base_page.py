@@ -1,7 +1,7 @@
 import os
 import time
 
-from selenium.webdriver import ActionChains, Keys
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -62,21 +62,9 @@ class BasePage:
         action.move_to_element(element)
         action.perform()
 
-    def action_click_and_hold(self, element):
-        action = ActionChains(self.driver)
-        action.click_and_hold(element)
-        action.perform()
-
-    def action_release(self, element):
-        action = ActionChains(self.driver)
-        action.release(element)
-        action.perform()
-
     def js_script_click(self, element):
         self.driver.execute_script("arguments[0].click();", element)
 
-    def extract_text_from_element(self, element):
-        self.driver.execute_script("return arguments[0].textContent", element)
 
     def latest_download_file(self):
         path = r'/Users/anton/Downloads'
@@ -84,3 +72,5 @@ class BasePage:
         files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
         newest = files[-1]
         return newest
+
+

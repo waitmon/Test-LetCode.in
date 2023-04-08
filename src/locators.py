@@ -52,3 +52,48 @@ class PageLocators:
                                       '6]/label[2]/input')
     TERMS_AND_CONDITIONS_CHECKBOX = (By.XPATH, '/html/body/app-root/app-radio-check/section[1]/div/div/div['
                                                '1]/div/div/div[7]/label[2]/input')
+
+    DRAG_BOX = (By.CSS_SELECTOR, '#sample-box')
+    CONTAINER_BOX = (By.CSS_SELECTOR, '[class="example-boundary"]')
+
+    DRAG_BOX_SOURCE = (By.CSS_SELECTOR, '[id="draggable"]')
+    DROP_BOX_TARGET = (By.CSS_SELECTOR, '[id="droppable"]')
+    
+    TO_DO_TASK = (By.XPATH, "//div[text()=' Fall asleep']")
+    DONE_TASK = (By.XPATH, "//div[text()=' Walk dog']")
+    TASK_LIST = (By.CSS_SELECTOR, '#cdk-drop-list-1')
+
+    SELECTABLE_OPTION = (By.CSS_SELECTOR, '#selectable')
+
+    SLIDER = (By.CSS_SELECTOR, '#generate')
+    GET_COUNTRIES_BUTTON = (By.CSS_SELECTOR, '[class="button is-primary"]')
+    LIMIT_COUNTER = (By.CSS_SELECTOR, 'h1[class="subtitle has-text-info"]')
+    COUNTRY_LIST = (By.CSS_SELECTOR, '[class="has-text-primary-light"]')
+
+    CALORIES_SORT_HEADER = (By.CSS_SELECTOR, 'div[class="mat-sort-header-content ng-tns-c30-1"]')
+    CALORIES_LIST = (By.XPATH, "//label[text()='Sortable Tables']/following-sibling::table//tr/td[2]")
+
+    UNIVERSITY_LIST = (By.XPATH, "//table[@id='advancedtable']/tbody/tr/td[2]")
+    SHOW_ENTRIES = (By.CSS_SELECTOR, 'select[name="advancedtable_length"]')
+    SEARCH_FIELD = (By.CSS_SELECTOR, 'input[type="search"]')
+    SEARCH_RESULT = (By.XPATH, '//*[@id="advancedtable"]/tbody/tr/td[2]')
+    SERIAL_NUMBER_LIST = (By.XPATH, "//table[@id='advancedtable']/tbody/tr/td[1]")
+    NEXT_PAGE = (By.XPATH, '//*[@id="advancedtable_next"]')
+
+    FIRST_NAME_FORM = (By.CSS_SELECTOR, '#firstname')
+    LAST_NAME_FORM = (By.CSS_SELECTOR, '#lasttname')
+    EMAIL_FORM = (By.CSS_SELECTOR, '#email')
+    PHONE_NUMBER_FORM = (By.CSS_SELECTOR, '#Phno')
+    ADDRESS_LINE_1_FORM = (By.CSS_SELECTOR, '#Addl1')
+    ADDRESS_LINE_2_FORM = (By.CSS_SELECTOR, '#Addl2')
+    STATE_FORM = (By.CSS_SELECTOR, '#state')
+    POSTAL_CODE_FORM = (By.CSS_SELECTOR, '#postalcode')
+    GENDER_LIST_FORM = (By.CSS_SELECTOR, 'input[type="radio"][name="gender"]')
+    TERMS_CHECKBOX_FORM = (By.XPATH, '/html/body/app-root/app-forms/section[1]/div/div/div[1]/div/div/form/div['
+                                     '7]/div/label/input')
+    DATE_OF_BIRTH = (By.CSS_SELECTOR, 'input[type="date"]')
+    SUBMIT_BUTTON = (By.CSS_SELECTOR, 'input[type="submit"]')
+
+    DOWNLOAD_XLS = (By.CSS_SELECTOR, '#xls')
+    DOWNLOAD_PDF = (By.CSS_SELECTOR, '#pdf')
+    DOWNLOAD_TXT = (By.CSS_SELECTOR, '#txt')

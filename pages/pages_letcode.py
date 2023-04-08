@@ -2,12 +2,14 @@ import random
 import string
 import time
 
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.base_page import BasePage
-from src.generator import generated_new_user
+from src.generator import generated_new_user, generated_university
 from src.locators import PageLocators
 
 
@@ -79,6 +81,14 @@ class ButtonPage(BasePage):
     def check_button_is_disabled(self):
         button = self.element_is_present(self.locators.DISABLED_BUTTON)
         assert not button.is_enabled(), 'The button is enabled'
+
+    def check_click_and_hold_button(self):
+        button = self.element_is_present(self.locators.HOLD_BUTTON)
+        self.scroll_to_element(button)
+        action = ActionChains(self.driver)
+        action.click_and_hold(button).pause(3).perform()
+        button_msg = button.text
+        assert button_msg == 'Button has been long pressed', 'Could not reproduce click and hold action'
 
 
 class DropdownPage(BasePage):
@@ -206,3 +216,174 @@ class RadioAndCheckbox(BasePage):
         selected_checkbox = self.element_is_present(self.locators.TERMS_AND_CONDITIONS_CHECKBOX)
         selected_checkbox.click()
         assert selected_checkbox.is_selected(), 'Checkbox was not selected'
+
+
+class DropPage(BasePage):
+    locators = PageLocators()
+
+    def check_drag_and_drop(self):
+        drag = self.element_is_visible(self.locators.DRAG_BOX_SOURCE)
+        drop = self.element_is_visible(self.locators.DROP_BOX_TARGET)
+        self.action_drag_and_drop_to_element(drag, drop)
+        assert drop.text == 'Dropped!', 'Could not reproduce drag and drop process'
+
+
+class SelectablePage(BasePage):
+    locators = PageLocators()
+
+    def check_selecting_all_elements(self):
+        action = ActionChains(self.driver)
+        action.key_down(Keys.LEFT_CONTROL).perform()
+        selectable_options = self.elements_are_present(self.locators.SELECTABLE_OPTION)
+        for option in selectable_options:
+            option.click()
+        selected_options_quantity = []
+        for status in selectable_options:
+            selected_options_quantity.append(status.get_attribute('class'))
+        assert 'ui-selectable ui-selected' in selected_options_quantity, 'Not all options were not selected'
+
+
+class SliderPage(BasePage):
+    locators = PageLocators()
+
+    def check_slider_interaction(self):
+        slider = self.element_is_present(self.locators.SLIDER)
+        self.action_drag_and_drop_by_offset(slider, random.randint(0, 50), 0)
+        word_limit_value = self.element_is_present(self.locators.LIMIT_COUNTER).text
+        self.element_is_present(self.locators.GET_COUNTRIES_BUTTON).click()
+        generated_country_list = self.element_is_visible(self.locators.COUNTRY_LIST).text
+        country_list = generated_country_list.split(' - ')
+        assert len(country_list) == word_limit_value, 'Generated countries are not based on slider values'
+
+
+class SortableTablesPage(BasePage):
+    locators = PageLocators()
+
+    def check_sorting_by_calories_desc(self):
+        sort_header = self.element_is_visible(self.locators.CALORIES_SORT_HEADER)
+        self.action_move_to_element(sort_header)
+        self.action_double_click(sort_header)
+        calories_available = self.elements_are_present(self.locators.CALORIES_LIST)
+        calories_list_descending_order = []
+        for value in calories_available:
+            current_value = value.text
+            calories_list_descending_order.append(current_value)
+        assert calories_list_descending_order == sorted(calories_list_descending_order, reverse=True), \
+            'Descending sorting was not reproduced '
+
+    def check_sorting_by_calories_asc(self):
+        sort_header = self.element_is_visible(self.locators.CALORIES_SORT_HEADER)
+        self.action_move_to_element(sort_header)
+        self.action_double_click(sort_header)
+        sort_header.click()
+        calories_available = self.elements_are_present(self.locators.CALORIES_LIST)
+        calories_list_descending_order = []
+        for value in calories_available:
+            current_value = value.text
+            calories_list_descending_order.append(current_value)
+        assert calories_list_descending_order == sorted(calories_list_descending_order), 'Ascending ' \
+                                                                                         'sorting was not' \
+                                                                                         ' reproduced '
+
+
+class AdvancedTablePage(BasePage):
+    locators = PageLocators()
+
+    def check_searching_university_name(self):
+        uni_name = random.sample(next(generated_university()).uni_name, k=1)
+        search_field = self.element_is_present(self.locators.SEARCH_FIELD)
+        search_field.send_keys(uni_name)
+        search_request = search_field.get_attribute('value')
+        search_result = self.element_is_visible(self.locators.SEARCH_RESULT).text
+        assert search_request == search_result, 'Searching request and result did not match'
+
+    def check_selecting_serial_numbers(self):
+        show_entries = self.element_is_present(self.locators.SHOW_ENTRIES)
+        Select(show_entries).select_by_index(random.randint(0, 2))
+        chosen_entries = show_entries.get_attribute('value')
+        number_list = self.elements_are_present(self.locators.SERIAL_NUMBER_LIST)
+        assert len(number_list) == int(chosen_entries), 'Quality of displayed entries did not match with selected value'
+
+
+class WaitPage(BasePage):
+    locators = PageLocators()
+
+    def check_waiting_for_alert_appearance(self):
+        button = self.element_is_present(self.locators.SIMPLE_ALERT)
+        button.click()
+        WebDriverWait(self.driver, timeout=10).until(EC.alert_is_present())
+        alert_window = self.driver.switch_to.alert
+        alert_text = alert_window.text
+        alert_window.accept()
+        assert alert_text == "Finally I'm here, just to say Hi :)"
+
+
+class FormPage(BasePage):
+    locators = PageLocators()
+
+    def check_data_input(self):
+        user_info = next(generated_new_user())
+        first_name = user_info.first_name
+        last_name = user_info.last_name
+        email = user_info.email
+        phone_number = user_info.phone_number
+        first_address_line = user_info.address_line_1
+        second_address_line = user_info.address_line_2
+        state = user_info.state
+        postal_code = user_info.postal_code
+        date_of_birth = user_info.date_of_birth
+        self.element_is_present(self.locators.FIRST_NAME_FORM).send_keys(first_name)
+        self.element_is_present(self.locators.LAST_NAME_FORM).send_keys(last_name)
+        self.element_is_present(self.locators.EMAIL_FORM).clear()
+        self.element_is_present(self.locators.EMAIL_FORM).send_keys(email)
+        self.element_is_present(self.locators.PHONE_NUMBER_FORM).send_keys(phone_number)
+        self.element_is_present(self.locators.ADDRESS_LINE_1_FORM).send_keys(first_address_line)
+        self.element_is_present(self.locators.ADDRESS_LINE_2_FORM).send_keys(second_address_line)
+        self.element_is_present(self.locators.STATE_FORM).send_keys(state)
+        self.element_is_present(self.locators.POSTAL_CODE_FORM).send_keys(postal_code)
+        self.element_is_present(self.locators.DATE_OF_BIRTH).send_keys(date_of_birth)
+        gender_list = self.elements_are_present(self.locators.GENDER_LIST_FORM)
+        gender_button = gender_list[random.randint(0, 2)]
+        gender_button.click()
+        self.element_is_present(self.locators.TERMS_CHECKBOX_FORM).click()
+        self.element_is_present(self.locators.SUBMIT_BUTTON).click()
+
+
+class UploadAndDownloadPage(BasePage):
+    locators = PageLocators()
+
+    def check_xls_download(self):
+        self.element_is_present(self.locators.DOWNLOAD_XLS).click()
+        fileends = "crdownload"
+        while "crdownload" == fileends:
+            time.sleep(1)
+            newest_file = self.latest_download_file()
+            if "crdownload" in newest_file:
+                fileends = "crdownload"
+            else:
+                fileends = "none"
+        assert '.xls' in self.latest_download_file(), 'XLS file was not downloaded'
+
+    def check_pdf_download(self):
+        self.element_is_present(self.locators.DOWNLOAD_PDF).click()
+        fileends = "crdownload"
+        while "crdownload" == fileends:
+            time.sleep(1)
+            newest_file = self.latest_download_file()
+            if "crdownload" in newest_file:
+                fileends = "crdownload"
+            else:
+                fileends = "none"
+        assert '.pdf' in self.latest_download_file(), 'PDF file was not downloaded'
+
+    def check_txt_download(self):
+        self.element_is_present(self.locators.DOWNLOAD_TXT).click()
+        fileends = "crdownload"
+        while "crdownload" == fileends:
+            time.sleep(1)
+            newest_file = self.latest_download_file()
+            if "crdownload" in newest_file:
+                fileends = "crdownload"
+            else:
+                fileends = "none"
+        assert '.txt' in self.latest_download_file(), 'TXT file was not downloaded'

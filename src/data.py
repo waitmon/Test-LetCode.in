@@ -12,3 +12,8 @@ class NewUser:
     state: str = None
     postal_code: str = None
     date_of_birth: str = None
+
+
+@dataclass
+class University:
+    uni_name: list = None
