@@ -3,7 +3,7 @@ UI test of https://letcode.in/test
 
 ## Introduction
 
-This repository contains sets of UI tests of the most common web elements and interaction scenarios (inputs, clicks, selections, waits, data generations, etc). All tests were designed with a usage of Page Object Model pattern and Selenium Webdriver.
+This repository contains sets of UI tests of the most common web elements and interaction scenarios (inputs, clicks, selections, waits, data generations, etc).
 
 ## Set-up
 1) Install all requirements: 
